@@ -20,7 +20,7 @@ if (_unit == _killer || {!isPlayer _killer}) exitWith {
 
   private _extra2 = "";
   if (_unit == _killer) then {
-    private _near = ([nearestObjects [_posUnit, ["LandVehicle"], 10], {isPlayer _x}] call ACE_common_fnc_filter);
+    private _near = ([nearestObjects [_posUnit, ["LandVehicle"], 10], {isPlayer (driver _x)}] call ACE_common_fnc_filter);
     if (count _near > 0) then {
       _extra2 = format [" Nearby drivers: %1",
         [_near, {format ["%1 (%2, pos: %3, speed: %4, dir: %5, dist: %6m)%7",
