@@ -2,12 +2,12 @@
 
 class CfgPatches
 {
-	class ADDON
-	{
-		units[] = {};
-		requiredVersion = 1.0;
-		requiredAddons[] = {"ACE_main"};
-	};
+  class ADDON
+  {
+    units[] = {};
+    requiredVersion = 1.0;
+    requiredAddons[] = {"ACE_main"};
+  };
 };
 
 class Extended_PreInit_EventHandlers {

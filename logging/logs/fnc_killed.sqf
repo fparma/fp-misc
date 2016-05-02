@@ -3,24 +3,26 @@
 params ["_unit", "_killer"];
 if (!isPlayer _unit) exitWith {};
   private _posUnit = getPosATL _unit;
-if (_posUnit distance [0,0] < 10) exitWith {};
+if (_posUnit distance2D [0,0] < 100) exitWith {};
 
 if (_unit == _killer || {!isPlayer _killer}) exitWith {
 
   private _lasthit = _unit getVariable [QGVAR(lasthit), []];
   private _extra = "";
   if (count _lasthit > 0) then {
-    _extra = format [" Last hit by %1, %2s ago. (Projectile: %3).",
-    _lasthit select 0,
-    time - (_lasthit select 1),
-    _lasthit select 2
+    _extra = format [" Last hit by %1, %2s ago.",
+      _lasthit select 0,
+      time - (_lasthit select 1)
     ];
+    if (count (_lasthit select 2) > 0) then {
+      _extra = _extra + ' (Projectile: )' + (_lasthit select 2);
+    };
   };
   _unit setVariable [QGVAR(lasthit), nil];
 
   private _extra2 = "";
   if (_unit == _killer) then {
-    private _near = ([nearestObjects [_posUnit, ["LandVehicle"], 10], {isPlayer (driver _x)}] call ACE_common_fnc_filter);
+    private _near = (nearestObjects [_posUnit, ["LandVehicle"], 10]) select {isPlayer (driver _x)};
     if (count _near > 0) then {
       _extra2 = format [" Nearby drivers: %1",
         [_near, {format ["%1 (%2, pos: %3, speed: %4, dir: %5, dist: %6m)%7",
@@ -48,11 +50,11 @@ private _posKiller = getPosATL _killer;
 
 private _crew = [];
 if (!(_killer isKindOf "Man")) then {
-  private _plrs = [fullCrew _killer, {isPlayer (_this select 0)}] call ACE_common_fnc_filter;
-  _crew = [_plrs, {
+  private _plrs = (fullCrew _killer) select {isPlayer (_x select 0)};
+  _crew = _plrs apply {
     _x params ["_unit", "_role", "", "_turretPath"];
     (format ["%1 - %2(%3)", name _unit, _role, _turretPath])
-  }] call ACE_common_fnc_map;
+  };
 };
 
 (format ["%1 was killed at %2 by %3(%4), from a distance of %5m (Killer's dir: %6).%7",

@@ -7,7 +7,7 @@ private _proj = param [6, objNull];
 if (isNull _proj) exitWith {};
 
 // Clean up
-if (count ([GVAR(grenades), {!(isNull (_x select 0))}] call ACE_common_fnc_filter) == 0) then {
+if (count (GVAR(grenades) select {!(isNull (_x select 0))}) == 0) then {
   GVAR(grenades) = [];
 };
 
@@ -28,15 +28,15 @@ if (count ([GVAR(grenades), {!(isNull (_x select 0))}] call ACE_common_fnc_filte
 
     [_pfhId] call CBA_fnc_removePerFrameHandler;
 
-    private _near = [allPlayers, {alive _x && {_x distance _pos < 40}}] call ACE_common_fnc_filter;
+    private _near = allPlayers select {alive _x && {_x distance _pos < 40}};
     if (count _near > 0) then {
-      private _names = [_near, {
+      private _names = _near apply {
         format ["%1 (%2m)%3",
           name _x,
           round (_x distance _pos),
           [", ", ""] select (_forEachIndex == ((count _near) -1 ))
-        ]
-      }] call ACE_common_fnc_map;
+        ];
+      };
 
       (format ["%1 threw a grenade (%2) at %3. %4 player(s) were within 40m (%5)",
       name player,

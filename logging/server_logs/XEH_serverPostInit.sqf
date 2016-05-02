@@ -34,10 +34,10 @@
   (format ["%1 tried to defuse an explosive (%2) at %3, and failed", name _unit, typeOf _exp, getPosATL _exp]) call FUNC(log);
 }] call ACE_common_fnc_addEventHandler;
 
-["ace_explosives_detonate", {
+["ace_explosives_detonated", {
   params ["_exp", "_unit", "_pos"];
-  private _plrs = [allPlayers, {_x distance _pos < 50}] call ACE_common_fnc_filter;
-  _plrs = [_plrs, {format ["%1 (%2)m, ", name _x, round (_x distance _pos)]}] call ACE_common_fnc_map;
+  private _plrs = allPlayers select {_x distance _pos < 50};
+  _plrs = _plrs apply {format ["%1 (%2)m, ", name _x, round (_x distance _pos)]};
 
   (format ["%1 detonated an explosive (%2) at %3.%4",
     name _unit,
